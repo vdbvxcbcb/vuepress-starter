@@ -1412,6 +1412,8 @@ export const getHomeMultiDataAction = (dispatch, getState) => {
 
 - 第二步：在 redux 中继承 devtools
 
+[Github 地址](https://github.com/zalmoxisus/redux-devtools-extension)
+
 ![img](https://cdn.nlark.com/yuque/0/2021/jpeg/1614731/1628173976700-e82c2024-b4a8-44bc-8bd8-35c7afba0274.jpeg)
 
 ![img](https://cdn.nlark.com/yuque/0/2021/jpeg/1614731/1628175225119-04d638b8-5898-42af-bb13-ca7c3e587b09.jpeg)
@@ -2620,7 +2622,7 @@ Redux 作者的建议
 - 只要是需要共享的状态，都交给 redux 来管理和维护；
 - 从服务器请求的数据（包括请求的操作），交给 redux 来维护；
 
-
+如果没有管理好样式、状态和请求数据极容易形成 x 山！
 
 
 

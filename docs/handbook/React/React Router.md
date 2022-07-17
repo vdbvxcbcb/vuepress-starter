@@ -47,9 +47,11 @@ history 接口是 HTML5 新增的, 它有六种模式改变 URL 而不刷新页�
 
 history.pushState("", {}, href)
 
-href 为 abc  基于原来的路径添加 /abc
+href 为 abc  表示基于原来的路径添加 /abc
 
-href 为  /abc 基于原来的路径替换掉整个路径
+href 为  /abc 表示基于原来的路径替换掉整个路径
+
+localhost/a/d.html  =>  localhost/abc
 
 ```html
 <div id="app">
@@ -189,7 +191,7 @@ activeStyle 方式
 
 activeClassName 方式：
 
-- 事实上在默认匹配成功时，NavLink就会添加上一个动态的 active class；
+- 事实上在默认匹配成功时，NavLink 就会添加上一个动态的 active class；
 - 所以我们也可以直接编写样式
 
 App.css
@@ -277,7 +279,7 @@ export default class User extends PureComponent {
     return this.state.isLogin ? (
       <div>
         <h2>User</h2>
-        <h2>用户名: Tom</h2>
+        <h2>用户名: coderwhy</h2>
       </div>
     ): <Redirect to="/login"/>
   }
@@ -1149,6 +1151,243 @@ export default withRouter(App);
 效果图
 
 ![img](https://cdn.nlark.com/yuque/0/2021/jpeg/1614731/1628772522816-4d82a1d7-82e3-4f3d-8a7a-57b0df155f77.jpeg)
+
+### 实际应用
+
+src\router\index.js
+
+```js
+import React from 'react';
+import { Redirect } from "react-router-dom";
+
+import Discover from "@/pages/discover";
+import Recommend from "../pages/discover/child-pages/recommend";
+import Ranking from "../pages/discover/child-pages/ranking";
+import Songs from "../pages/discover/child-pages/songs";
+import Djradio from "../pages/discover/child-pages/djradio";
+import Artist from "../pages/discover/child-pages/artist";
+import Album from "../pages/discover/child-pages/album";
+import Player from "../pages/player";
+
+import Mine from "@/pages/mine";
+import Friend from "@/pages/friend";
+
+const routes = [
+  {
+    path: "/",
+    exact: true,
+    render: () => (
+      <Redirect to="/discover"/>
+    )
+  },
+  {
+    path: "/discover",
+    component: Discover,
+    routes: [
+      {
+        path: "/discover",
+        exact: true,
+        render: () => (
+          <Redirect to="/discover/recommend"/>
+        )
+      },
+      {
+        path: "/discover/recommend",
+        component: Recommend
+      },
+      {
+        path: "/discover/ranking",
+        component: Ranking
+      },
+      {
+        path: "/discover/songs",
+        component: Songs
+      },
+      {
+        path: "/discover/djradio",
+        exact: true,
+        component: Djradio
+      },
+      {
+        path: "/discover/artist",
+        component: Artist
+      },
+      {
+        path: "/discover/album",
+        component: Album
+      },
+      {
+        path: "/discover/player",
+        component: Player
+      }
+    ]
+  },
+  {
+    path: "/mine",
+    component: Mine
+  },
+  {
+    path: "/friend",
+    component: Friend
+  },
+];
+
+export default routes;
+```
+
+src\App.js
+
+```jsx
+import React, { memo } from 'react';
+import { Provider } from "react-redux";
+import { renderRoutes } from 'react-router-config';
+
+import routes from './router';
+import store from "./store";
+
+import AppHeader from "components/app-header";
+import AppFooter from "components/app-footer";
+import AppPlayerBar from './pages/player/app-player-bar';
+import { HashRouter } from 'react-router-dom';
+
+export default memo(function App() {
+  return (
+    // 使用 Provider，让包裹的组件使用 connect 来获取 store 的数据
+    <Provider store={store}>
+      <HashRouter>
+        <AppHeader/>
+        {renderRoutes(routes)}
+        <AppFooter/>
+        <AppPlayerBar/>
+      </HashRouter>
+    </Provider>
+  )
+})
+```
+
+src\components\app-header\index.js
+
+```jsx
+import React, { memo } from 'react';
+
+import { headerLinks } from "@/common/local-data";
+
+import { NavLink } from 'react-router-dom';
+import { SearchOutlined } from '@ant-design/icons'
+import { Input } from "antd";
+import {
+  HeaderWrapper,
+  HeaderLeft,
+  HeaderRight
+} from './style';
+
+export default memo(function AppHeader() {
+
+  // 页面代码
+  const showSelectItem = (item, index) => {
+    if (index < 3) {
+      return (
+        <NavLink to={item.link}>
+          {item.title}
+          <i className="sprite_01 icon"></i>
+        </NavLink>
+      )
+    } else {
+      return <a href={item.link}>{item.title}</a>
+    }
+  }
+
+  // 返回的jsx
+  return (
+    <HeaderWrapper>
+      <div className="content wrap-v1">
+        <HeaderLeft>
+          <a href="#/" className="logo sprite_01">网易云音乐</a>
+          <div className="select-list">
+            {
+              headerLinks.map((item, index) => {
+                return (
+                  <div key={item.title} className="select-item">
+                    {showSelectItem(item, index)}
+                  </div>
+                )
+              })
+            }
+          </div>
+        </HeaderLeft>
+        <HeaderRight>
+          <Input className="search" placeholder="音乐/视频/电台/用户" prefix={<SearchOutlined/>}/>
+          <div className="center">创作者中心</div>
+          <div>登录</div>
+        </HeaderRight>
+      </div>
+      <div className="divider"></div>
+    </HeaderWrapper>
+  )
+})
+```
+
+二级路由
+
+src\pages\discover\index.js
+
+```jsx
+import React, { memo } from 'react';
+import { renderRoutes } from 'react-router-config';
+
+import { dicoverMenu } from "@/common/local-data";
+
+import { NavLink } from 'react-router-dom';
+import {
+  DiscoverWrapper,
+  TopMenu
+} from './style';
+
+export default memo(function Discover(props) {
+  const { route } = props;
+
+  return (
+    <DiscoverWrapper>
+      <div className="top">
+        <TopMenu className="wrap-v1">
+          {
+            dicoverMenu.map((item, index) => {
+              return (
+                <div className="item" key={item.title}>
+                  <NavLink to={item.link}>{item.title}</NavLink>
+                </div>
+              )
+            })
+          }
+        </TopMenu>
+      </div>
+      {renderRoutes(route.routes)}
+    </DiscoverWrapper>
+  )
+})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

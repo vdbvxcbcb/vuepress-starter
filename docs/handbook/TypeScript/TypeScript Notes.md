@@ -2480,6 +2480,7 @@ if ((value as string).length) {
 function isString(value:(string | number)): value is string {
     return typeof value === 'string';
 }
+
 if (isString(value)) {
     console.log(value.length);
 } else {
@@ -2504,15 +2505,19 @@ if (typeof value === 'string') {
 class Person {
   name:string = 'lnj';
 }
+
 class Animal {
   age: number = 18;
 }
+
 let getRandomObject = ():(Person | Animal) => {
   let num = Math.random();
   return (num >= 0.5) ? new Person() : new Animal();
 };
+
 let obj = getRandomObject();
 console.log(obj);
+
 if (obj instanceof Person) {
   console.log(obj.name);
 } else {
@@ -3841,6 +3846,7 @@ let p = create(People, 'funlee'); // 可以
 ```
 
 ```typescript
+// 静态类型接口
 interface CPerson {
   new(name: string):any;
 }
