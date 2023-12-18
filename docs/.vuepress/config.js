@@ -22,7 +22,8 @@ module.exports = {
       { text: "TypeScript", link: "/TypeScript/TypeScript Notes" },
       { text: "Vue2", link: "/Vue2/Vue2 Basics" },
       { text: "Vue3", link: "/Vue3/Vue3 Basics" },
-      { text: "小程序", link: "/Wechat Mini Program/Mini Program Get Started" }
+      { text: "小程序", link: "/Wechat Mini Program/Mini Program Get Started" },
+      { text: "GitHub", link: "https://github.com/vdbvxcbcb" }
     ],
     sidebar: {
       '/React/': [
