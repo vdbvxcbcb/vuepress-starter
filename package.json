@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
+    "test": "node --test tests/*.test.js",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   },
   "devDependencies": {
-    "vuepress": "^1.8.2",
+    "@babel/core": "7.29.7",
+    "@babel/plugin-transform-shorthand-properties": "7.29.7",
+    "vuepress": "1.8.2",
     "vuepress-plugin-nuggets-style-copy": "^1.0.3"
   },
   "dependencies": {
-    "vuepress-theme-reco": "1.5.7"
+    "vuepress-theme-reco": "1.6.17"
   }
 }

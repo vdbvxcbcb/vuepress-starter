@@ -13,6 +13,18 @@ module.exports = {
   markdown: {
     lineNumbers: true // 代码显示行号
   },
+  chainWebpack: (config) => {
+    config.module
+      .rule('js')
+      .use('babel-loader')
+      .tap(options => ({
+        ...options,
+        plugins: [
+          ...(options.plugins || []),
+          require.resolve('@babel/plugin-transform-shorthand-properties')
+        ]
+      }))
+  },
   title: "前端博客笔记",
   description: "如果有一天忘记了所有的前端知识，希望这里能让人回忆起来，转行前纪念",
   themeConfig: {
@@ -86,6 +98,11 @@ module.exports = {
   },
   theme: "reco",
   plugins: [
+    // reco 主题内置的平滑滚动会与中文 hash 和 active-header-links 竞态，使用 VuePress 原生锚点滚动
+    ["vuepress-plugin-smooth-scroll", false],
+    ["@vuepress/active-header-links", false],
+    require('./plugins/smooth-scroll'),
+    require('./plugins/active-header-links'),
     // 代码复制弹窗插件
     ["vuepress-plugin-nuggets-style-copy", {
       copyText: "copy",
